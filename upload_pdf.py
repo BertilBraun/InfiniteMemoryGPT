@@ -3,9 +3,7 @@ import sys
 from pypdf import PdfReader
 from unidecode import unidecode
 
-from util.gpt import create_embedding
-from util.milvus import insert_data
-from util.util import chunk_text
+from util.upload import upload_text
 
 if len(sys.argv) < 2:
     print("Usage: python upload_pdf.py <pdf_filename>")
@@ -21,11 +19,4 @@ def extract_text_from_pdf(pdf_filename: str) -> str:
     # Purge/asciify the raw_text
     return unidecode(raw_text)
 
-blocks = chunk_text(extract_text_from_pdf(pdf_filename))
-
-# Embed and insert blocks into the database
-for i, block in enumerate(blocks):
-    title = f"{pdf_filename} Block {i+1}"
-    print(f"Inserting block {i+1} with title {title}")
-    block_embedding = create_embedding(block)
-    insert_data(title, block, block_embedding)
+upload_text(extract_text_from_pdf(pdf_filename))
