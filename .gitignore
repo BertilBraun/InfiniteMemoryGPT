@@ -3,3 +3,6 @@ config.json
 .venv/**
 **/__pycache__/**
 pdfs/**
+logs/**
+scrape.bat
+writer.py

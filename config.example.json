@@ -2,5 +2,11 @@
   "openai_api_key": "YOUR_OPENAI_API_KEY",
   "milvus_uri": "https://YOUR_MILVUS_DATABASE_URL:YOUR_MILVUS_DATABASE_PORT",
   "milvus_password": "YOUR_MILVUS_DATABASE_ADMIN_PASSWORD",
-  "system_promt": "You are a helpful AI assistant."
+  "system_promt": "You are a helpful AI assistant.",
+  "log_folder": "logs",
+  "temperature": 0.5,
+  "max_tokens": 2048,
+  "top_p": 1,
+  "frequency_penalty": 0,
+  "presence_penalty": 0
 }

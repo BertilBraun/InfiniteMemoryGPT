@@ -1,3 +1,5 @@
+import datetime
+
 import openai
 
 from .settings import config
@@ -9,12 +11,19 @@ def chat_completion(messages: list[dict]) -> str:
     completion = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
-        temperature=0.5,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
+        temperature=config['temperature'],
+        max_tokens=config['max_tokens'],
+        top_p=config['top_p'],
+        frequency_penalty=config['frequency_penalty'],
+        presence_penalty=config['presence_penalty']
     )
+    
+    # write request and response to file at config['log_folder'] + '/' + (current_time in HH-MM-SS format) + '.txt'
+    with open(f"{config['log_folder']}/{datetime.datetime.now().strftime('%H-%M-%S')}.txt", "w") as f:
+        f.write("Request:\n")
+        f.write(str(messages))
+        f.write("\n\nResponse:\n")
+        f.write(str(completion["choices"][0]["message"]["content"])) 
 
     return completion["choices"][0]["message"]["content"]
 
