@@ -1,0 +1,5 @@
+{
+  "openai_api_key": "YOUR_OPENAI_API_KEY",
+  "milvus_uri": "https://YOUR_MILVUS_DATABASE_URL:YOUR_MILVUS_DATABASE_PORT",
+  "milvus_password": "YOUR_MILVUS_DATABASE_ADMIN_PASSWORD"
+}
