@@ -18,8 +18,8 @@ connections.connect(
 # Create collection
 fields = [
     FieldSchema(name="pk", dtype=DataType.VARCHAR, is_primary=True, auto_id=False, max_length=100),
-    FieldSchema(name="question", dtype=DataType.VARCHAR, max_length=2024),
-    FieldSchema(name="answer", dtype=DataType.VARCHAR, max_length=2024),
+    FieldSchema(name="question", dtype=DataType.VARCHAR, max_length=8096),
+    FieldSchema(name="answer", dtype=DataType.VARCHAR, max_length=8096),
     FieldSchema(name="embeddings", dtype=DataType.FLOAT_VECTOR, dim=1536),
 ]
 
