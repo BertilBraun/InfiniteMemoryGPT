@@ -4,7 +4,7 @@ import openai
 from pymilvus import (Collection, CollectionSchema, DataType, FieldSchema,
                       connections, utility)
 
-from settings import config
+from .settings import config
 
 # Connect to Milvus
 connections.connect(

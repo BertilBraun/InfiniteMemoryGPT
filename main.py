@@ -1,6 +1,6 @@
-from gpt import chat_completion, create_embedding
-from milvus import insert_data, search_top_k
-from settings import config
+from util.gpt import chat_completion, create_embedding
+from util.milvus import insert_data, search_top_k
+from util.settings import config
 
 SYSTEM_PROMPT = config['system_prompt']
 

@@ -3,9 +3,9 @@ import sys
 from pypdf import PdfReader
 from unidecode import unidecode
 
-from gpt import create_embedding
-from milvus import insert_data
-from util import chunk_text
+from util.gpt import create_embedding
+from util.milvus import insert_data
+from util.util import chunk_text
 
 if len(sys.argv) < 2:
     print("Usage: python upload_pdf.py <pdf_filename>")
