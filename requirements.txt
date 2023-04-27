@@ -1,3 +1,5 @@
 numpy
 openai
 pymilvus
+pypdf
+unidecode
