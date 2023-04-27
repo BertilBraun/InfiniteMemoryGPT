@@ -5,9 +5,10 @@ from unidecode import unidecode
 
 from gpt import create_embedding
 from milvus import insert_data
+from util import chunk_text
 
 if len(sys.argv) < 2:
-    print("Usage: python script_name.py <pdf_filename>")
+    print("Usage: python upload_pdf.py <pdf_filename>")
     sys.exit(1)
 
 pdf_filename = sys.argv[1]
@@ -19,17 +20,6 @@ def extract_text_from_pdf(pdf_filename: str) -> str:
 
     # Purge/asciify the raw_text
     return unidecode(raw_text)
-
-def chunk_text(raw_text: str, chunk_size=1000, chunk_overlap=200) -> list[str]:
-    # Split text into overlapping blocks
-
-    blocks = []
-    for i in range(0, len(raw_text), chunk_size - chunk_overlap):
-        block = raw_text[i:i + chunk_size]
-        blocks.append(block)
-    
-    return blocks
-
 
 blocks = chunk_text(extract_text_from_pdf(pdf_filename))
 

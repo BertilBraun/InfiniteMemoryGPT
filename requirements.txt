@@ -3,3 +3,5 @@ openai
 pymilvus
 pypdf
 unidecode
+requests
+beautifulsoup4
