@@ -8,4 +8,4 @@ if len(sys.argv) < 2:
 
 file_path = sys.argv[1]
 
-upload_text(open(file_path).read())
+upload_text(open(file_path).read(), file_path)

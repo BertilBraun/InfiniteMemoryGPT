@@ -31,4 +31,4 @@ def replace_triple_newlines(text: str) -> str:
         text = text.replace("\n\n\n", "\n")
     return text
 
-upload_text(replace_triple_newlines(extract_text_from_html(url)))
+upload_text(replace_triple_newlines(extract_text_from_html(url)), url)

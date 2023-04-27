@@ -19,4 +19,4 @@ def extract_text_from_pdf(pdf_filename: str) -> str:
     # Purge/asciify the raw_text
     return unidecode(raw_text)
 
-upload_text(extract_text_from_pdf(pdf_filename))
+upload_text(extract_text_from_pdf(pdf_filename), pdf_filename)
