@@ -1,23 +1,8 @@
-import openai
-
+from gpt import chat_completion, create_embedding
 from milvus import insert_data, search_top_k
 from settings import config
 
 SYSTEM_PROMPT = config['system_prompt']
-openai.api_key = config['openai_api_key']
-
-def chat_completion(messages):
-    completion = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=messages,
-        temperature=0.5,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-
-    return completion["choices"][0]["message"]["content"]
 
 while True:
     user_question = input("User: ")
@@ -37,10 +22,6 @@ while True:
 
     add_to_db = input("Should this message be added to the database? (yes/no): ")
     if add_to_db.lower() in ["yes", "y"]:
-        response = openai.Embedding.create(
-            input=user_question,
-            model="text-embedding-ada-002"
-        )
-        question_embeddings = response['data'][0]['embedding']
-        insert_data(user_question, gpt_response, question_embeddings)
+        question_embedding = create_embedding(user_question)
+        insert_data(user_question, gpt_response, question_embedding)
        

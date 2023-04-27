@@ -45,18 +45,18 @@ else:
     # If the collection exists, load it
     chatbot_collection = Collection(collection_name, using="default")
 
-def insert_data(question, answer, embeddings):
+def insert_data(question: str, answer: str, embedding: list[float]) -> None:
     entities = [
         [str(uuid4())],  # Primary key
         [question],
         [answer],
-        [embeddings],
+        [embedding],
     ]
 
     chatbot_collection.insert(entities)
     chatbot_collection.flush()
 
-def search_top_k(question, k=5):
+def search_top_k(question: str, k=5) -> list:
     response = openai.Embedding.create(
         input=question,
         model="text-embedding-ada-002"
