@@ -2,7 +2,7 @@ config.json
 
 .venv/**
 **/__pycache__/**
-pdfs/**
+data/**
 logs/**
 scrape.bat
 writer.py
