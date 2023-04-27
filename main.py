@@ -1,10 +1,10 @@
 from util.gpt import chat_completion
 from util.milvus import search_top_k
 from util.settings import config
-from util.util import prompt_add_to_db
+from util.util import fetch_input, prompt_add_to_db
 
 while True:
-    user_question = input("User: ")
+    user_question = fetch_input("User: ")
     top_k_results = search_top_k(user_question)
     messages = [
         {"role": "system", "content": config['system_prompt']},

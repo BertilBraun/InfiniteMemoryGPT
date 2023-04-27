@@ -19,7 +19,8 @@ def chat_completion(messages: list[dict]) -> str:
     )
     
     # write request and response to file at config['log_folder'] + '/' + (current_time in HH-MM-SS format) + '.txt'
-    with open(f"{config['log_folder']}/{datetime.datetime.now().strftime('%H-%M-%S')}.txt", "w") as f:
+    file_path = f"{config['log_folder']}/{datetime.datetime.now().strftime('%H-%M-%S')}.txt"
+    with open(file_path, "w", encoding="utf8") as f:
         f.write("Request:\n")
         f.write(str(messages))
         f.write("\n\nResponse:\n")

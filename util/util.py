@@ -8,3 +8,9 @@ def prompt_add_to_db(question: str, answer: str) -> None:
         question_embedding = create_embedding(question)
         insert_data(question, answer, question_embedding)
     
+
+def fetch_input(prompt: str) -> str:
+    start = input(prompt)
+    while "SUBMIT" not in start:
+        start += input()
+    return start.replace("SUBMIT", "").strip()
