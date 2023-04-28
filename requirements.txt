@@ -5,3 +5,4 @@ pypdf
 unidecode
 requests
 beautifulsoup4
+tiktoken

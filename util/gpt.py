@@ -1,11 +1,21 @@
 import datetime
 
 import openai
+import tiktoken
 
 from .settings import config
 
-openai.api_key = config['openai_api_key']
+MAX_TOKENS = 8000
 
+openai.api_key = config['openai_api_key']
+encoding = tiktoken.get_encoding("cl100k_base")
+
+
+def count_tokens_in_messages(messages: list[dict]) -> int:
+    return sum(count_tokens(message['content']) for message in messages)
+
+def count_tokens(text: str) -> int:
+    return len(encoding.encode(text))
 
 def chat_completion(messages: list[dict]) -> str:
     completion = openai.ChatCompletion.create(
