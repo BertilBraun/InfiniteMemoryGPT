@@ -32,6 +32,7 @@ def chat_completion(messages: list[dict]) -> str:
         for message in messages:
             f.write(message['role'] + ": " + message['content'] + "\n\n")
         
+    print("Fetching response...")
     completion = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,

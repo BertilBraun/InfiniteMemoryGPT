@@ -10,7 +10,7 @@ def prompt_add_to_db(question: str, answer: str) -> None:
     
 
 def fetch_input(prompt: str) -> str:
-    start = input(prompt)
+    start = input(prompt) + "\n"
     while "SUBMIT" not in start:
-        start += input()
+        start += input() + "\n"
     return start.replace("SUBMIT", "").strip()

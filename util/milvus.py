@@ -57,6 +57,7 @@ def insert_data(question: str, answer: str, embedding: list[float]) -> None:
     chatbot_collection.flush()
 
 def search_top_k(question: str, k=5) -> list:
+    print("Searching for similar questions...")
     response = openai.Embedding.create(
         input=question,
         model="text-embedding-ada-002"
