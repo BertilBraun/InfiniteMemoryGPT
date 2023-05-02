@@ -14,9 +14,6 @@ pdf_filename = sys.argv[1]
 def extract_text_from_pdf(pdf_filename: str) -> str:
     # Read PDF file using PyPDF2
     reader = PdfReader(pdf_filename)
-    raw_text = "\n\n".join([page.extract_text() for page in reader.pages])
-
-    # Purge/asciify the raw_text
-    return unidecode(raw_text)
+    return "\n\n".join([page.extract_text() for page in reader.pages])
 
 upload_text(extract_text_from_pdf(pdf_filename), pdf_filename)

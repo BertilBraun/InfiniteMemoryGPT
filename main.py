@@ -5,13 +5,14 @@ from util.util import fetch_input, prompt_add_to_db
 
 while True:
     user_question = fetch_input("User: ")
+    print("Fetching response...")
     top_k_results = search_top_k(user_question, 15)
     starter_messages = [
         {"role": "system", "content": config['system_prompt']},
     ]
 
     info_messages = []
-    for result in top_k_results:
+    for result in top_k_results[::-1]:
         info_messages.append({"role": "user", "content": result.entity.question})
         info_messages.append({"role": "assistant", "content": result.entity.answer})
         

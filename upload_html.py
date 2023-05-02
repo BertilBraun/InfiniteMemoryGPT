@@ -21,14 +21,6 @@ def extract_text_from_html(url: str) -> str:
     soup = BeautifulSoup(response.content, "html.parser")
 
     # Extract text from the parsed HTML
-    raw_text = soup.get_text(separator="\n")
+    return soup.get_text(separator="\n")
 
-    # Purge/asciify the raw_text
-    return unidecode(raw_text)
-
-def replace_triple_newlines(text: str) -> str:
-    while "\n\n\n" in text:
-        text = text.replace("\n\n\n", "\n")
-    return text
-
-upload_text(replace_triple_newlines(extract_text_from_html(url)), url)
+upload_text(extract_text_from_html(url), url)
