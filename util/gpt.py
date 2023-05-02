@@ -33,16 +33,23 @@ def chat_completion(messages: list[dict]) -> str:
             f.write(message['role'] + ": " + message['content'] + "\n\n")
         
     print("Fetching response...")
-    completion = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=messages,
-        temperature=config['temperature'],
-        max_tokens=config['max_tokens'],
-        top_p=config['top_p'],
-        frequency_penalty=config['frequency_penalty'],
-        presence_penalty=config['presence_penalty']
-    )
-    
+    for _ in range(3):
+        try:
+            completion = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=messages,
+                temperature=config['temperature'],
+                max_tokens=config['max_tokens'],
+                top_p=config['top_p'],
+                frequency_penalty=config['frequency_penalty'],
+                presence_penalty=config['presence_penalty']
+            )
+            break
+        except openai.error.RateLimitError:
+            print("Rate limit exceeded, retrying...")
+    else:
+        raise openai.error.RateLimitError("Rate limit exceeded, please try again later.")            
+            
     with open(file_path, "a", encoding="utf8") as f:
         f.write("\n\nResponse:\n")
         f.write(str(completion["choices"][0]["message"]["content"])) 
