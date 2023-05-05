@@ -1,4 +1,4 @@
-from util.gpt import MAX_TOKENS, chat_completion, count_tokens_in_messages
+from util.gpt import MAX_TOKENS, chat_completion, count_tokens_in_messages, remove_messages_until_token_count_available
 from util.milvus import search_top_k
 from util.settings import config
 from util.util import fetch_input, prompt_add_to_db
@@ -17,8 +17,7 @@ while True:
         
     info_messages.append({"role": "user", "content": user_question})
 
-    while count_tokens_in_messages(info_messages) + count_tokens_in_messages(starter_messages) > MAX_TOKENS - config['max_tokens']:
-        info_messages.pop(0)
+    info_messages = remove_messages_until_token_count_available(info_messages, config['max_tokens'] + count_tokens_in_messages(starter_messages))
 
     gpt_response = chat_completion(starter_messages + info_messages)
     print("GPT-4:", gpt_response)

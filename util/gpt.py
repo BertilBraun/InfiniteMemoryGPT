@@ -18,6 +18,15 @@ def count_tokens_in_messages(messages: list[dict]) -> int:
 def count_tokens(text: str) -> int:
     return len(encoding.encode(text))
 
+def remove_messages_until_token_count_available(messages: list[dict], token_count: int) -> list[dict]:
+    while count_tokens_in_messages(messages) > MAX_TOKENS - token_count:
+        messages.pop(0)
+    
+    if len(messages) == 0:
+        raise ValueError("No messages left after removing messages until token count available.")
+    
+    return messages
+
 def chat_completion(messages: list[dict]) -> str:
     # write request and response to file at config['log_folder'] + '/' + (current_date in YYYY-MM-DD) + '/' + (current_time in HH-MM-SS format) + '.txt'
     folder_path = f"{config['log_folder']}/{datetime.datetime.now().strftime('%Y-%m-%d')}"
@@ -32,7 +41,7 @@ def chat_completion(messages: list[dict]) -> str:
         for message in messages:
             f.write(message['role'] + ": " + message['content'] + "\n\n")
         
-    print("Fetching response...")
+    print("Fetching response... (" + str(count_tokens_in_messages(messages)) + " tokens in messages)")
     for _ in range(3):
         try:
             completion = openai.ChatCompletion.create(

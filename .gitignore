@@ -6,3 +6,4 @@ data/**
 logs/**
 scrape.bat
 writer.py
+translator.py

@@ -1,4 +1,4 @@
-from util.gpt import chat_completion, count_tokens_in_messages, MAX_TOKENS
+from util.gpt import chat_completion, count_tokens_in_messages, MAX_TOKENS, remove_messages_until_token_count_available
 from util.milvus import search_top_k
 from util.settings import config
 from util.util import fetch_input, prompt_add_to_db
@@ -21,8 +21,7 @@ info_messages.append({"role": "user", "content": user_question})
 
 while True:
     # purge messages if they get too long
-    while count_tokens_in_messages(info_messages) + starter_tokens > MAX_TOKENS - config['max_tokens']:
-        info_messages.pop(0)
+    info_messages = remove_messages_until_token_count_available(info_messages, config['max_tokens'] + starter_tokens)
 
     gpt_response = chat_completion(starter_messages + info_messages)
     info_messages.append({"role": "assistant", "content": gpt_response})

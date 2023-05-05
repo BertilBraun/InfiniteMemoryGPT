@@ -32,7 +32,7 @@ def upload_text(text: str, origin: str) -> None:
 
     # Embed and insert blocks into the database
     for i, block in enumerate(blocks):
-        title = f"{origin} Block {i+1}"
+        title = f"Data Source: '{origin}' Block {i+1}"
         print(f"Inserting block {i+1} with title {title}")
         block_embedding = create_embedding(block)
         insert_data(title, block, block_embedding)
