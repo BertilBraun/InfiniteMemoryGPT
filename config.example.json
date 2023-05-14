@@ -1,5 +1,8 @@
 {
   "openai_api_key": "YOUR_OPENAI_API_KEY",
+  "database_in_use": "pinecone OR milvus",
+  "pinecone_api_key": "YOUR_PINECONE_API_KEY",
+  "pinecone_environment": "YOUR_PINECONE_ENVIRONMENT_NAME",
   "milvus_uri": "https://YOUR_MILVUS_DATABASE_URL:YOUR_MILVUS_DATABASE_PORT",
   "milvus_password": "YOUR_MILVUS_DATABASE_ADMIN_PASSWORD",
   "system_promt": "You are a helpful AI assistant.",

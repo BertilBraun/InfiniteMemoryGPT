@@ -7,3 +7,6 @@ logs/**
 scrape.bat
 writer.py
 translator.py
+optimizer.py
+references.py
+sections.py

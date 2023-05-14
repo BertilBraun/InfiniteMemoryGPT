@@ -22,3 +22,18 @@ def fetch_input(prompt: str) -> str:
         return start.replace("SUBMIT", "").strip()
     except KeyboardInterrupt:
         sys.exit(0)
+
+def markdownify(text: str) -> str:
+    while "  " in text:
+        text = text.replace("  ", " ")
+        
+    while " \n" in text:
+        text = text.replace(" \n", " ")
+        
+    while " \r\n" in text:
+        text = text.replace(" \r\n", " ")
+        
+    if text[-1] != "\n":
+        text += "\n"
+        
+    return text

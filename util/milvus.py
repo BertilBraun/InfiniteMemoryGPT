@@ -3,6 +3,8 @@ from uuid import uuid4
 import openai
 from pymilvus import (Collection, CollectionSchema, DataType, FieldSchema,
                       connections, utility)
+from util.gpt import create_embedding
+from util.types import Message, Messages, Role
 
 from .settings import config
 
@@ -56,13 +58,9 @@ def insert_data(question: str, answer: str, embedding: list[float]) -> None:
     chatbot_collection.insert(entities)
     chatbot_collection.flush()
 
-def search_top_k(question: str, k=5) -> list:
+def search_top_k(question: str, k=5, hottest_last=True) -> Messages:
     print("Searching for similar questions...")
-    response = openai.Embedding.create(
-        input=question,
-        model="text-embedding-ada-002"
-    )
-    embeddings = response['data'][0]['embedding']
+    embeddings = create_embedding(question)
 
     chatbot_collection.load()
     search_params = {
@@ -77,5 +75,10 @@ def search_top_k(question: str, k=5) -> list:
         limit=k,
         output_fields=["question", "answer"]
     )
+    
+    messages = []
+    for result in (results[0] if not hottest_last else reversed(results[0])):
+        messages.append(Message(role=Role.USER, content=result[0].entity.question))
+        messages.append(Message(role=Role.ASSISTANT, content=result[0].entity.answer))
 
-    return results[0]
+    return messages

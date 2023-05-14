@@ -1,8 +1,10 @@
 import datetime
 import os
+import sys
 
 import openai
 import tiktoken
+from util.types import Messages
 
 from .settings import config
 
@@ -12,13 +14,13 @@ openai.api_key = config['openai_api_key']
 encoding = tiktoken.get_encoding("cl100k_base")
 
 
-def count_tokens_in_messages(messages: list[dict]) -> int:
-    return sum(count_tokens(message['content']) for message in messages)
+def count_tokens_in_messages(messages: Messages) -> int:
+    return sum(count_tokens(message.content) for message in messages)
 
 def count_tokens(text: str) -> int:
     return len(encoding.encode(text))
 
-def remove_messages_until_token_count_available(messages: list[dict], token_count: int) -> list[dict]:
+def remove_messages_until_token_count_available(messages: Messages, token_count: int) -> Messages:
     while count_tokens_in_messages(messages) > MAX_TOKENS - token_count:
         messages.pop(0)
     
@@ -27,7 +29,7 @@ def remove_messages_until_token_count_available(messages: list[dict], token_coun
     
     return messages
 
-def chat_completion(messages: list[dict]) -> str:
+def chat_completion(messages: Messages) -> str:
     # write request and response to file at config['log_folder'] + '/' + (current_date in YYYY-MM-DD) + '/' + (current_time in HH-MM-SS format) + '.txt'
     folder_path = f"{config['log_folder']}/{datetime.datetime.now().strftime('%Y-%m-%d')}"
     
@@ -39,20 +41,25 @@ def chat_completion(messages: list[dict]) -> str:
     with open(file_path, "w", encoding="utf8") as f:
         f.write("Request:\n")
         for message in messages:
-            f.write(message['role'] + ": " + message['content'] + "\n\n")
+            f.write(message.role.value + ": " + message.content + "\n\n")
         
     print("Fetching response... (" + str(count_tokens_in_messages(messages)) + " tokens in messages)")
     for _ in range(3):
         try:
-            completion = openai.ChatCompletion.create(
+            text = ""
+            for res in openai.ChatCompletion.create(
                 model="gpt-4",
-                messages=messages,
+                messages=messages.toMap(),
                 temperature=config['temperature'],
                 max_tokens=config['max_tokens'],
                 top_p=config['top_p'],
                 frequency_penalty=config['frequency_penalty'],
-                presence_penalty=config['presence_penalty']
-            )
+                presence_penalty=config['presence_penalty'],
+                stream=True
+            ):
+                sys.stdout.write(res["choices"][0]["delta"].get("content", ""))
+                sys.stdout.flush()
+                text += str(res["choices"][0]["delta"].get("content", ""))
             break
         except openai.error.RateLimitError:
             print("Rate limit exceeded, retrying...")
@@ -61,9 +68,9 @@ def chat_completion(messages: list[dict]) -> str:
             
     with open(file_path, "a", encoding="utf8") as f:
         f.write("\n\nResponse:\n")
-        f.write(str(completion["choices"][0]["message"]["content"])) 
+        f.write(text) 
 
-    return completion["choices"][0]["message"]["content"]
+    return text
 
 def create_embedding(input: str) -> list[float]:
     response = openai.Embedding.create(
