@@ -4,7 +4,7 @@ import sys
 
 import openai
 import tiktoken
-from util.types import Messages
+from util.types import Messages, messagesToMap
 
 from .settings import config
 
@@ -49,7 +49,7 @@ def chat_completion(messages: Messages) -> str:
             text = ""
             for res in openai.ChatCompletion.create(
                 model="gpt-4",
-                messages=messages.toMap(),
+                messages=messagesToMap(messages),
                 temperature=config['temperature'],
                 max_tokens=config['max_tokens'],
                 top_p=config['top_p'],

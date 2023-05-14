@@ -18,9 +18,11 @@ class Message:
             "content": self.content
         }
 
-class Messages(list[Message]):
-    def toMap(self):
-        return [message.toMap() for message in self]
+Messages = list[Message]
+
+def messagesToMap(messages: Messages):
+    return [message.toMap() for message in messages]
+
 
 @dataclass
 class DatabaseEntry:
