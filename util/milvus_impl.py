@@ -1,6 +1,5 @@
 from uuid import uuid4
 
-import openai
 from pymilvus import (Collection, CollectionSchema, DataType, FieldSchema,
                       connections, utility)
 from util.gpt import create_embedding

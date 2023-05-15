@@ -1,9 +1,12 @@
+import os
+import subprocess
 import sys
-from util.gpt import create_embedding
-from util.milvus import insert_data
 
 
 def prompt_add_to_db(question: str, answer: str) -> None:
+    from util.gpt import create_embedding
+    from util.database import insert_data
+
     try:
         add_to_db = input("Should this message be added to the database? (yes/no): ")
     except KeyboardInterrupt:
@@ -37,3 +40,34 @@ def markdownify(text: str) -> str:
         text += "\n"
         
     return text
+
+def run_runner(inputs: list[str], script: str) -> None:
+    print("Running GPT-4 on each input...")
+    os.makedirs("runner", exist_ok=True)
+    script = script.strip(".py")
+
+    processes = []
+    for i, input in enumerate(inputs):
+        with open(f"runner/data_{i}.txt", "w") as f:
+            f.write(input)
+            
+        cmd = f"start cmd.exe /k python {script}.py {i}".split(" ")
+        proc = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        processes.append(proc)
+        
+    print("Waiting for GPT-4 to finish...")
+    for proc in processes:
+        proc.wait()
+    print("Done!")
+    
+def get_runner_input() -> str:
+    if len(sys.argv) < 2:
+        print("Usage: python <script> <input number>")
+        sys.exit(1)
+        
+    input_number = sys.argv[1]
+    print("Input number:", input_number)
+
+    with open(f"runner/data_{input_number}.txt", "r") as f:
+        input = f.read()
+    return input

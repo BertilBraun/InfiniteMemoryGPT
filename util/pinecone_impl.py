@@ -1,7 +1,5 @@
-import os
 import pinecone
 from uuid import uuid4
-import openai
 from util.gpt import create_embedding
 from util.types import DatabaseEntry, Message, Messages, Role
 from .settings import config
@@ -11,18 +9,20 @@ pinecone.init(
     environment=config['pinecone_environment']
 )
 
-index_name = 'gpt4_pinecone_chatbot'
+index_name = 'gpt4-pinecone-chatbot'
 
 # only create index if it doesn't exist
 if index_name not in pinecone.list_indexes():
+    print("Creating index...")
     pinecone.create_index(
         name=index_name,
         dimension=1536,
         metric='cosine'
     )
+    print("Index created.")
 
 # now connect to the index
-index = pinecone.GRPCIndex(index_name)
+index = pinecone.Index(index_name)
 
 def insert_data(question: str, answer: str, embedding: list[float]) -> None:
     entry = DatabaseEntry(

@@ -6,3 +6,4 @@ unidecode
 requests
 beautifulsoup4
 tiktoken
+pinecone-client

@@ -1,6 +1,6 @@
 
 from util.gpt import create_embedding
-from util.milvus import insert_data
+from util.database import insert_data
 from unidecode import unidecode
 
 
