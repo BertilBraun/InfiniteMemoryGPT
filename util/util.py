@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 
+from .settings import config
+
 
 def prompt_add_to_db(question: str, answer: str) -> None:
     from util.gpt import create_embedding
@@ -42,13 +44,14 @@ def markdownify(text: str) -> str:
     return text
 
 def run_runner(inputs: list[str], script: str) -> None:
+    runner_folder = config['runner_folder']
     print("Running GPT-4 on each input...")
-    os.makedirs("runner", exist_ok=True)
+    os.makedirs(runner_folder, exist_ok=True)
     script = script.strip(".py")
 
     processes = []
     for i, input in enumerate(inputs):
-        with open(f"runner/data_{i}.txt", "w") as f:
+        with open(f"{runner_folder}/data_{i}.txt", "w") as f:
             f.write(input)
             
         cmd = f"start cmd.exe /k python {script}.py {i}".split(" ")

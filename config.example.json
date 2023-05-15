@@ -7,6 +7,7 @@
   "milvus_password": "YOUR_MILVUS_DATABASE_ADMIN_PASSWORD",
   "system_promt": "You are a helpful AI assistant.",
   "log_folder": "logs",
+  "runner_folder": "runner",
   "temperature": 0.5,
   "max_tokens": 2048,
   "top_p": 1,
