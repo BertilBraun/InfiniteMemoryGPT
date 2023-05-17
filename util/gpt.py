@@ -38,12 +38,12 @@ def chat_completion(messages: Messages) -> str:
     
     file_path = f"{folder_path}/{datetime.datetime.now().strftime('%H-%M-%S')}.txt"
     
-    with open(file_path, "w", encoding="utf8") as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write("Request:\n")
         for message in messages:
-            f.write(message.role.value + ": " + message.content + "\n\n")
+            f.write(str(message) + "\n\n")
         
-    print("Fetching response... (" + str(count_tokens_in_messages(messages)) + " tokens in messages)")
+    print("Fetching response (" + str(count_tokens_in_messages(messages)) + " tokens in messages) for " + str(len(messages)) + " messages.")
     for _ in range(3):
         try:
             text = ""
@@ -66,7 +66,7 @@ def chat_completion(messages: Messages) -> str:
     else:
         raise openai.error.RateLimitError("Rate limit exceeded, please try again later.")            
             
-    with open(file_path, "a", encoding="utf8") as f:
+    with open(file_path, "a", encoding="utf-8") as f:
         f.write("\n\nResponse:\n")
         f.write(text) 
 

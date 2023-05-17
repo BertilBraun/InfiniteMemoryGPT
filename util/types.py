@@ -17,7 +17,10 @@ class Message:
             "role": self.role.value,
             "content": self.content
         }
-
+        
+    def __str__(self):
+        return f"{self.role.value}: {self.content}"
+    
 Messages = list[Message]
 
 def messagesToMap(messages: Messages):
