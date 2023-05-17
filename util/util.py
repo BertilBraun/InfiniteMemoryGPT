@@ -6,8 +6,8 @@ from .settings import config
 
 
 def prompt_add_to_db(question: str, answer: str) -> None:
-    from util.gpt import create_embedding
     from util.database import insert_data
+    from util.gpt import create_embedding
 
     try:
         add_to_db = input("Should this message be added to the database? (yes/no): ")
@@ -62,13 +62,21 @@ def run_runner(inputs: list[str], script: str) -> None:
     print("Done!")
     
 def get_runner_input() -> str:
+    runner_folder = config['runner_folder']
     if len(sys.argv) < 2:
         print("Usage: python <script> <input number>")
         sys.exit(1)
         
     input_number = sys.argv[1]
     print("Input number:", input_number)
+    
+    if not os.path.exists(f"{runner_folder}/data_{input_number}.txt"):
+        print("Input file does not exist!")
+        sys.exit(1)
 
-    with open(f"runner/data_{input_number}.txt", "r", encoding="utf-8") as f:
+    with open(f"{runner_folder}/data_{input_number}.txt", "r", encoding="utf-8") as f:
         input = f.read()
+    
+    os.remove(f"{runner_folder}/data_{input_number}.txt")
+    
     return input

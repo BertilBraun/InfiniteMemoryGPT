@@ -8,6 +8,12 @@ scrape.bat
 writer.py
 translator.py
 optimizer.py
+optimizer_worker.py
+todo.py
+todo_worker.py
+translator.py
+translator_worker.py
 references.py
 sections.py
+abstract.py
 runner/**

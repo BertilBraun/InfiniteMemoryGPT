@@ -4,6 +4,7 @@ import sys
 
 import openai
 import tiktoken
+
 from util.types import Messages, messagesToMap
 
 from .settings import config
@@ -22,6 +23,7 @@ def count_tokens(text: str) -> int:
 
 def remove_messages_until_token_count_available(messages: Messages, token_count: int) -> Messages:
     while count_tokens_in_messages(messages) > MAX_TOKENS - token_count:
+        print("Warning: removing message with " + str(count_tokens(messages[0].content)) + " tokens.")
         messages.pop(0)
     
     if len(messages) == 0:
