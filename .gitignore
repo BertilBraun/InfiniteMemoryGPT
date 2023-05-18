@@ -11,6 +11,7 @@ optimizer.py
 optimizer_worker.py
 todo.py
 todo_worker.py
+todo_runner.py
 translator.py
 translator_worker.py
 references.py

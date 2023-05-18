@@ -1,5 +1,6 @@
 from util.database import search_top_k
-from util.gpt import (chat_completion, count_tokens_in_messages,
+from util.gpt import (chat_completion, chat_completion_system_prompt,
+                      count_tokens_in_messages,
                       remove_messages_until_token_count_available)
 from util.settings import config
 from util.types import Message, Role
@@ -23,23 +24,14 @@ So, let's start with the first step. What should the prompt be about?
 
 user_question = fetch_input(RESPONSE + "User: ")
 
-starter_messages = [
-    Message(role=Role.SYSTEM, content=config['system_prompt']),
-]
-
-starter_tokens = count_tokens_in_messages(starter_messages)
-
-info_messages = [
+messages = [
     Message(role=Role.USER, content=PROMPT),
     Message(role=Role.ASSISTANT, content=RESPONSE),
     Message(role=Role.USER, content=user_question)
 ]
 
 while True:
-    # purge messages if they get too long
-    info_messages = remove_messages_until_token_count_available(info_messages, config['max_tokens'] + starter_tokens)
-
-    gpt_response = chat_completion(starter_messages + info_messages)
-    info_messages.append(Message(role=Role.ASSISTANT, content=gpt_response))    
-    info_messages.append(Message(role=Role.USER, content=fetch_input("User: ")))
+    gpt_response = chat_completion_system_prompt(messages, config['system_prompt'])
+    messages.append(Message(role=Role.ASSISTANT, content=gpt_response))    
+    messages.append(Message(role=Role.USER, content=fetch_input("User: ")))
     

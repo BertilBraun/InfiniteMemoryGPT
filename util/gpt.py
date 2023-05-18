@@ -5,7 +5,7 @@ import sys
 import openai
 import tiktoken
 
-from util.types import Messages, messagesToMap
+from util.types import Message, Messages, Role, messagesToMap
 
 from .settings import config
 
@@ -31,8 +31,14 @@ def remove_messages_until_token_count_available(messages: Messages, token_count:
     
     return messages
 
-def chat_completion(messages: Messages) -> str:
-    # write request and response to file at config['log_folder'] + '/' + (current_date in YYYY-MM-DD) + '/' + (current_time in HH-MM-SS format) + '.txt'
+def chat_completion_system_prompt(messages: Messages, system: str) -> str:
+    return chat_completion(messages, [Message(role=Role.SYSTEM, content=system)])
+
+
+def chat_completion(messages: Messages, starter_messages: Messages) -> str:
+    messages = remove_messages_until_token_count_available(messages, config['max_tokens'] + count_tokens_in_messages(starter_messages))
+    messages = starter_messages + messages
+    
     folder_path = f"{config['log_folder']}/{datetime.datetime.now().strftime('%Y-%m-%d')}"
     
     if not os.path.exists(folder_path):
@@ -48,6 +54,8 @@ def chat_completion(messages: Messages) -> str:
     print("Fetching response (" + str(count_tokens_in_messages(messages)) + " tokens in messages) for " + str(len(messages)) + " messages.")
     for _ in range(3):
         try:
+            sys.stdout.write("GPT-4: ")
+
             text = ""
             for res in openai.ChatCompletion.create(
                 model="gpt-4",
