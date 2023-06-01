@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 
+from util.types import Message, Messages, Role
+
 from .settings import config
 
 
@@ -80,3 +82,31 @@ def get_runner_input() -> str:
     os.remove(f"{runner_folder}/data_{input_number}.txt")
     
     return input
+
+def simple_chat(prompt: str) -> None:    
+    starter_messages = [Message(role=Role.SYSTEM, content=config['system_prompt'])]
+    messages = [Message(role=Role.USER, content=prompt)]
+
+    chat(messages, starter_messages)
+        
+def query_chat(prompt: str, query: str) -> None:
+    from util.database import search_top_k
+    
+    starter_messages = [
+        Message(role=Role.SYSTEM, content=config['system_prompt']),
+        Message(role=Role.USER, content="The following are information that I have gathered for you:"),
+    ]
+    
+    messages = search_top_k(query, 15)
+    messages.append(Message(role=Role.USER, content=prompt))
+    
+    chat(messages, starter_messages)
+    
+        
+def chat(messages: Messages, starter_messages: Messages) -> None:
+    from util.gpt import chat_completion
+    
+    while True:
+        gpt_response = chat_completion(messages, starter_messages)
+        messages.append(Message(role=Role.ASSISTANT, content=gpt_response))
+        messages.append(Message(role=Role.USER, content=fetch_input("User: ")))

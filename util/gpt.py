@@ -70,6 +70,7 @@ def chat_completion(messages: Messages, starter_messages: Messages) -> str:
                 sys.stdout.write(res["choices"][0]["delta"].get("content", ""))
                 sys.stdout.flush()
                 text += str(res["choices"][0]["delta"].get("content", ""))
+            print()
             break
         except openai.error.RateLimitError:
             print("Rate limit exceeded, retrying...")
