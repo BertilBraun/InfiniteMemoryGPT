@@ -1,7 +1,10 @@
-import pinecone
 from uuid import uuid4
+
+import pinecone
+
 from util.gpt import create_embedding
 from util.types import DatabaseEntry, Message, Messages, Role
+
 from .settings import config
 
 pinecone.init(
@@ -40,7 +43,7 @@ def insert_data(question: str, answer: str, embedding: list[float]) -> None:
     index.upsert(vectors=records)
 
 def search_top_k(question: str, k=5, hottest_last=True) -> Messages:
-    print(Message(role=Role.SYSTEM, content="Searching for similar questions..."))
+    print("Searching for similar questions...")
     embeddings = create_embedding(question)
 
     # now query

@@ -52,18 +52,19 @@ def run_runner(inputs: list[str], script: str) -> None:
     runner_folder = config['runner_folder']
     print("Running GPT-4 on each input...")
     os.makedirs(runner_folder, exist_ok=True)
-    script = script.strip(".py")
+    script = script if script.endswith(".py") else script + ".py"
 
     for i, input in enumerate(inputs):
         with open(f"{runner_folder}/data_{i}.txt", "w", encoding="utf-8") as f:
             f.write(input)
             
-        cmd = f"start cmd.exe /k python {script}.py {i}".split(" ")
+        print(f"Running {script} on input {i}...")
+        cmd = f"start cmd.exe /k python {script} {i}".split(" ")
         subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     print("Done!")
     
-def get_runner_input() -> str:
+def get_runner_input(promp_continue=True) -> str:
     runner_folder = config['runner_folder']
     if len(sys.argv) < 2:
         print("Usage: python <script> <input number>")
@@ -77,11 +78,15 @@ def get_runner_input() -> str:
         sys.exit(1)
 
     with open(f"{runner_folder}/data_{input_number}.txt", "r", encoding="utf-8") as f:
-        input = f.read()
+        input_data = f.read()
+    print("Input data:", input_data)
     
     os.remove(f"{runner_folder}/data_{input_number}.txt")
     
-    return input
+    if promp_continue:
+        input("\n\nPress enter to start the writing process...\n\n")
+    
+    return input_data
 
 def simple_chat(prompt: str) -> None:    
     starter_messages = [Message(role=Role.SYSTEM, content=config['system_prompt'])]
@@ -89,7 +94,7 @@ def simple_chat(prompt: str) -> None:
 
     chat(messages, starter_messages)
         
-def query_chat(prompt: str, query: str) -> None:
+def query_chat(prompt: str, query: str, top_k = 15) -> None:
     from util.database import search_top_k
     
     starter_messages = [
@@ -97,7 +102,7 @@ def query_chat(prompt: str, query: str) -> None:
         Message(role=Role.USER, content="The following are information that I have gathered for you:"),
     ]
     
-    messages = search_top_k(query, 15)
+    messages = search_top_k(query, top_k)
     messages.append(Message(role=Role.USER, content=prompt))
     
     chat(messages, starter_messages)
